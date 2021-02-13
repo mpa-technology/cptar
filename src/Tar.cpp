@@ -23,7 +23,7 @@ std::string Tar::readfile(const std::string fileName){
     char buffer[T_BLOCKSIZE];
     std::string res;
 
-    auto size = th_get_size(tar_);
+    const auto size = th_get_size(tar_);
 
     for ( unsigned i = 0; i <= size ; i += T_BLOCKSIZE) {
         auto n_buf = tar_block_read(tar_, buffer);
