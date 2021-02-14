@@ -8,7 +8,7 @@ Tar::Tar(){
 
 void Tar::open(const std::string &fileName){
 
-    if(const int ret = tar_open(&tar_,fileName.c_str(),nullptr,static_cast<int>(OEPN_TYPE::RDONLY),0,0) ; ret != 0){
+    if(const int ret = tar_open(&tar_,fileName.c_str(), nullptr, static_cast<int>(OEPN_TYPE::RDONLY),0,0) ; ret != 0){
         throw std::runtime_error("error open file: "+fileName);
     }
 
@@ -40,6 +40,9 @@ std::string Tar::readfile(const std::string fileName){
 
 std::vector<std::string> Tar::fileList(){
 
+    if(tar_ == nullptr)
+        throw std::runtime_error("tar not open");
+
         seekBegin_();
 
     if(tar_ == nullptr)
@@ -61,9 +64,6 @@ std::vector<std::string> Tar::fileList(){
 
 
     }
-
-
-
 
     return result;
 }
