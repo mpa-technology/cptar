@@ -23,7 +23,7 @@ public:
 
     void open(const std::string &fileName);
 
-    std::string readfile(const std::string fileName);
+    std::string readfile(const std::string &fileName);
 
     std::vector<std::string>fileList();
 

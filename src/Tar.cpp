@@ -14,7 +14,11 @@ void Tar::open(const std::string &fileName){
 
 }
 
-std::string Tar::readfile(const std::string fileName){
+std::string Tar::readfile(const std::string &fileName){
+
+   if(!tar)
+	   throw std::runtime_error("tar not open");
+
 
     seekBegin_();
 
