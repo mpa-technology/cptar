@@ -3,6 +3,7 @@
 
 
 Tar::Tar():tar_(nullptr),openFlag_(OPEN_TYPE::NOPEN){
+
 }
 
 void Tar::open(const std::string &fileName){
@@ -14,7 +15,7 @@ void Tar::open(const std::string &fileName){
 
 }
 
-std::string Tar::readfile(const std::string &fileName){
+std::string Tar::readFileAll(const std::string &fileName){
 
     verifyOpenRead_();
 
@@ -68,7 +69,8 @@ std::vector<std::string> Tar::fileList(){
 }
 
 Tar::~Tar(){
-    if(tar_ != nullptr)
+
+    if(tar_)
         tar_close(tar_);
 }
 
@@ -89,10 +91,18 @@ void Tar::setFile_(const std::string &fileName){
 
 
     }
-    throw  std::runtime_error("file not foidn");
+    throw  TarException("file("+fileName+") not found");
 }
 
 void Tar::seekBegin_(){
     auto hendel = tar_fd(tar_);
     lseek(hendel, 0, SEEK_SET);
+}
+
+void Tar::verifyOpenRead_(){
+
+    if(!tar_)
+        throw TarException("Tar("+fileName_+") not open");
+    if(openFlag_ != OPEN_TYPE::RDONLY)
+        throw TarException("Tar("+fileName_+") not read mod");
 }

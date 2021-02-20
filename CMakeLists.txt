@@ -10,8 +10,17 @@ include(GNUInstallDirs)
 
 set(SOURCE_FILES src/Tar.cpp src/TarException.cpp)
 
+option(BUILD_SHARED_LIB "builld shared version" ON)
 
-add_library( ${PROJECT_NAME}  ${SOURCE_FILES})
+if(BUILD_SHARED_LIB)
+    message("builld shared version")
+    add_library( ${PROJECT_NAME} SHARED  ${SOURCE_FILES})
+else()
+    message("builld static version")
+    add_library( ${PROJECT_NAME}  ${SOURCE_FILES})
+endif()
+
+
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

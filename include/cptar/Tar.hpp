@@ -25,10 +25,9 @@ public:
 
     void open(const std::string &fileName);
 
-    std::string readfile(const std::string &fileName);
+    std::string readFileAll(const std::string &fileName);
 
     std::vector<std::string>fileList();
-
 
     ~Tar();
 
@@ -40,13 +39,7 @@ private:
     void setFile_(const std::string & fileName);
     void seekBegin_();
 
-    void verifyOpenRead_(){
-
-        if(!tar_)
-            throw TarException("Tar("+fileName_+") not open");
-        if(openFlag_ != OPEN_TYPE::RDONLY)
-            throw TarException("Tar("+fileName_+") not read mod");
-    }
+    void verifyOpenRead_();
 
 
 
