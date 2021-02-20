@@ -2,23 +2,21 @@
 #include <unistd.h>
 
 
-Tar::Tar(){
-    tar_ = nullptr;
+Tar::Tar():tar_(nullptr),openFlag_(OPEN_TYPE::NOPEN){
 }
 
 void Tar::open(const std::string &fileName){
 
-    if(const int ret = tar_open(&tar_,fileName.c_str(), nullptr, static_cast<int>(OEPN_TYPE::RDONLY),0,0) ; ret != 0){
-        throw std::runtime_error("error open file: "+fileName);
+    openFlag_ = OPEN_TYPE::RDONLY;
+    if(const int ret = tar_open(&tar_,fileName.c_str(), nullptr, static_cast<int>(OPEN_TYPE::RDONLY),0,0) ; ret != 0){
+        throw TarException("error open file: "+fileName);
     }
 
 }
 
 std::string Tar::readfile(const std::string &fileName){
 
-   if(!tar)
-	   throw std::runtime_error("tar not open");
-
+    verifyOpenRead_();
 
     seekBegin_();
 
@@ -44,13 +42,10 @@ std::string Tar::readfile(const std::string &fileName){
 
 std::vector<std::string> Tar::fileList(){
 
-    if(tar_ == nullptr)
-        throw std::runtime_error("tar not open");
+    verifyOpenRead_();
 
-        seekBegin_();
+    seekBegin_();
 
-    if(tar_ == nullptr)
-        throw  std::runtime_error("tar not open");
 
     std::vector<std::string> result;
 

@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(GNUInstallDirs)
 
-set(SOURCE_FILES src/Tar.cpp)
+set(SOURCE_FILES src/Tar.cpp src/TarException.cpp)
 
 
 add_library( ${PROJECT_NAME}  ${SOURCE_FILES})

@@ -6,6 +6,7 @@
 
 #include <libtar.h>
 
+#include <cptar/TarException.hpp>
 
 class Tar{
 
@@ -13,7 +14,8 @@ class Tar{
 public:
 
 
-    enum class OEPN_TYPE{
+    enum class OPEN_TYPE{
+        NOPEN = -1,
         RDONLY = 00,
         WRONLY = 01
     };
@@ -32,9 +34,20 @@ public:
 
 private:
     TAR* tar_;
-
+    std::string fileName_;
+    OPEN_TYPE openFlag_;
 
     void setFile_(const std::string & fileName);
     void seekBegin_();
+
+    void verifyOpenRead_(){
+
+        if(!tar_)
+            throw TarException("Tar("+fileName_+") not open");
+        if(openFlag_ != OPEN_TYPE::RDONLY)
+            throw TarException("Tar("+fileName_+") not read mod");
+    }
+
+
 
 };
