@@ -3,7 +3,6 @@
 
 
 Tar::Tar():tar_(nullptr),openFlag_(OPEN_TYPE::NOPEN){
-
 }
 
 void Tar::open(const std::string &fileName){
@@ -13,6 +12,14 @@ void Tar::open(const std::string &fileName){
         throw TarException("error open file: "+fileName);
     }
 
+}
+
+void Tar::setFile(const std::string &fileName){
+    setFile_(fileName);
+}
+
+std::string Tar::currentFile() const{
+    return currentFile_;
 }
 
 std::string Tar::readFileAll(const std::string &fileName){
@@ -39,6 +46,28 @@ std::string Tar::readFileAll(const std::string &fileName){
 
 
     return res;
+}
+
+std::string Tar::readBlock(size_t &BlockSize){
+
+    char buffer[T_BLOCKSIZE];
+    std::string res;
+
+    const auto size = th_get_size(tar_);
+
+    for ( unsigned i = 0; i <= size-BlockSize ; i += T_BLOCKSIZE) {
+        auto n_buf = tar_block_read(tar_, buffer);
+        if (n_buf == EOF) {
+            break;
+        }
+        res += buffer;
+    }
+
+
+
+    return res;
+
+
 }
 
 std::vector<std::string> Tar::fileList(){
@@ -69,8 +98,7 @@ std::vector<std::string> Tar::fileList(){
 }
 
 Tar::~Tar(){
-
-    if(tar_)
+    if(tar_ != nullptr)
         tar_close(tar_);
 }
 
@@ -80,8 +108,10 @@ void Tar::setFile_(const std::string &fileName){
         const auto filename = th_get_pathname(tar_);
 
 
-        if(fileName == filename)
+        if(fileName == filename){
+            currentFile_ = fileName;
             return;
+        }
 
         //FIXME:this
         if (TH_ISREG(tar_) && (tar_skip_regfile(tar_) != 0)) {
@@ -91,7 +121,7 @@ void Tar::setFile_(const std::string &fileName){
 
 
     }
-    throw  TarException("file("+fileName+") not found");
+    throw  std::runtime_error("file not foidn");
 }
 
 void Tar::seekBegin_(){
